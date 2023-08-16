@@ -25,3 +25,8 @@ app.use(cors()) // Allow cors from all origin
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 }); 
+// Need to pass these arguments in env file
+// MONGO_URI
+// TOKEN
+// MAIL_ADD
+// MAIL_PASS
