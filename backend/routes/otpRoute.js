@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {sendOTP, verifyOtp} = require("../otpcontoller/controller")
+const {sendOTP, verifyOtp} = require("../controller/otpController")
 
 
 router.post('/verify', async(req, res)=>{
