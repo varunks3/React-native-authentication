@@ -1,5 +1,7 @@
 const nodemailer = require("nodemailer")
 
+
+// sending mail to email address by Less secure app feature from gmail, change the createTransport method if you want to send mail defferent method
 let mailTransporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -13,7 +15,7 @@ const sendEmail = async(mailDetails) => {
         await mailTransporter.sendMail(mailDetails)
         return;
     }catch (error){
-        console.log("failed to send mail")
+        throw Error("failed to send mail", error)
     }
 }
 

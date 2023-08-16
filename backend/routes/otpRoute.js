@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {sendOTP, verifyOtp} = require("../controller/otpController")
 
-
+// This file is for testing
 router.post('/verify', async(req, res)=>{
   try{
     let {email, otp} = req.body
@@ -14,12 +14,9 @@ router.post('/verify', async(req, res)=>{
 })
 router.post('/otp', async (req, res) => {
   try {
-   const {email, subject, message, duration} = req.body
+   const { email } = req.body
    const createdOTP = await sendOTP({
     email,
-    subject,
-    message,
-    duration,
    })
    res.status(200).send(`createdOTP successfully, ${createdOTP}`)
   } catch (error) {

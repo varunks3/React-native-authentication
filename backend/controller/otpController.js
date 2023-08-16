@@ -1,32 +1,36 @@
-const OTP = require("../model/otp")
+const OTP = require("../models/otp")
 const generateOTP = require("./generateOTP")
 const sendEmail = require("./sendEmail")
 
-const verifyOtp = async ({email, otp}) => {
+const verifyOTP = async ({email, otp}) => {
     try{
         if(!(email && otp)){
-            console.log("email or otp not provided")
+           throw Error("email or otp not provided")
         }
-        const matchedOTP = await OTP.findOne({
+        // Getting otp model record for user
+        const matchedOTPRecord = await OTP.findOne({
             email,
         })
-        if (!matchedOTP){
-            console.log("otp not found")
+        if (!matchedOTPRecord){
+           throw Error("otp not found")
         }
-        const {expiresAt} = matchedOTP
+        const {expiresAt} = matchedOTPRecord
         if (expiresAt < Date.now()){
             await OTP.deleteOne({email})
-            throw Error("code has expired")
+            throw Error("otp has expired")
         }
-        const validOTP = (otp == matchedOTP.otp)
+        // validating user entered otp and database otp
+        const validOTP = (otp == matchedOTPRecord.otp)
+        //returnning boolean value
         return validOTP
     }catch(error){
-        console.log(error)
-    } 
+       throw Error(error)
+    }
 }
-const sendOTP = async ({email, subject, message, duration = 1}) => {
+const sendOTP = async ({email }) => {
     try {
-        if(!(email && subject && message)){
+        console.log(email)
+        if(!(email)){
             console.log('provide all required input')
         }
         await OTP.deleteOne({email})
@@ -34,27 +38,25 @@ const sendOTP = async ({email, subject, message, duration = 1}) => {
         let mailDetails = {
             from: process.env.MAIL_ADD,
             to: email,
-            subject: subject,
+            subject: "Otp for resetting password",
             html: `<div> 
-                    <p>${message}</p>
-                    <p>Otp for  resetting password</p>
-                    <p>${generatedOTP}</p> 
+                    <p>Your Otp for resetting password is ${generatedOTP} expires in ${duration}hr</p>
                 </div>
                 `,
         };
         
         await sendEmail(mailDetails);
-        
+        let duration = 1 // set the duration to 1 hr 
         const newOTP = new OTP({
             email,
             otp: generatedOTP,
             createdAT: Date.now(),
-            expiresAt: Date.now() + 3600000 * +duration,
+            expiresAt: Date.now() + 3600000 * + duration,
         });
         const createdOTPRecord = await newOTP.save();
         return createdOTPRecord
     }catch(err){
-        console.log("err")
+        throw Error("Can't send the mail", err)
     } 
 }
 const deleteOTP = async (email) => {
@@ -64,4 +66,4 @@ const deleteOTP = async (email) => {
         console.log(error)
     }
 }
-module.exports = {sendOTP , verifyOtp, deleteOTP}
+module.exports = {sendOTP , verifyOTP, deleteOTP}

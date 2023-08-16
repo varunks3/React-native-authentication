@@ -1,12 +1,12 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../model/user');
-
+const User = require('../models/user');
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
   try {
+    // perform password is meet the required criteria or not here
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const user = new User({
       email: req.body.email,
@@ -29,6 +29,7 @@ router.post('/login', async (req, res) => {
     if (!passwordMatch) {
       return res.status(401).send('Invalid credentials.');
     }
+    // Generating token for the user
     const token = jwt.sign({ userId: user._id }, process.env.TOKEN, { expiresIn: '1h' });
     res.json({ token });
   } catch (error) {
