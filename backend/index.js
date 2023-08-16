@@ -16,7 +16,7 @@ app.use(express.json());
 // All routes
 app.use('/', authRoutes);
 app.use('/', protedRoutes);
-app.use('/', otpRoute);
+app.use('/', otpRoute); // you can remove this if you don't want otpRoute file
 app.use('/', passwordResetRoute);
 
 app.use(bodyParser.json());
