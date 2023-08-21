@@ -7,15 +7,14 @@ const router = express.Router();
 router.post('/signup', async (req, res) => {
   try {
     // perform password is meet the required criteria or not here
-    console.log(req.body.email)
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const users = new User({
+    const user = new User({
       name: req.body.name,
       phone: req.body.phone,
       email: req.body.email,
       password: hashedPassword
     });
-    await users.save();
+    await user.save();
     res.status(201).send('User singup successfully.');
   } catch (error) {
     res.status(500).send(error.message);
