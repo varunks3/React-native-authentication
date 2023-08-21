@@ -3,7 +3,7 @@ const verifyToken = require('../middleware/verifyToken');
 
 const router = express.Router();
 
-router.get('/protected', verifyToken, (req, res) => {
+router.get('/protected', (req, res) => {
   res.send('Protected route accessed.');
 });
 
