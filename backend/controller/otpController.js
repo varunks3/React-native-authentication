@@ -29,22 +29,21 @@ const verifyOTP = async ({email, otp}) => {
 }
 const sendOTP = async ({email }) => {
     try {
-        console.log(email)
         if(!(email)){
-            console.log('provide all required input')
+            throw Error('provide all required input')
         }
         await OTP.deleteOne({email})
+
         const generatedOTP = await generateOTP();
         let mailDetails = {
             from: process.env.MAIL_ADD,
             to: email,
             subject: "Otp for resetting password",
             html: `<div> 
-                    <p>Your Otp for resetting password is ${generatedOTP} expires in ${duration}hr</p>
+                    <p>Your Otp for resetting password is ${generatedOTP} expires in 1hr</p>
                 </div>
                 `,
         };
-        
         await sendEmail(mailDetails);
         let duration = 1 // set the duration to 1 hr 
         const newOTP = new OTP({
@@ -63,7 +62,7 @@ const deleteOTP = async (email) => {
     try{
         await OTP.deleteOne({email});
     }catch(error){
-        console.log(error)
+        throw Error(error)
     }
 }
 module.exports = {sendOTP , verifyOTP, deleteOTP}
