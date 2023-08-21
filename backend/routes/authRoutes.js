@@ -4,22 +4,25 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const router = express.Router();
 
-router.post('/register', async (req, res) => {
+router.post('/signup', async (req, res) => {
   try {
     // perform password is meet the required criteria or not here
+    console.log(req.body.email)
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const user = new User({
+    const users = new User({
+      name: req.body.name,
+      phone: req.body.phone,
       email: req.body.email,
       password: hashedPassword
     });
-    await user.save();
-    res.status(201).send('User registered successfully.');
+    await users.save();
+    res.status(201).send('User singup successfully.');
   } catch (error) {
     res.status(500).send(error.message);
   }
-});
+}); 
 
-router.post('/login', async (req, res) => {
+router.post('/signin', async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
