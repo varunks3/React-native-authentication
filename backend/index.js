@@ -13,6 +13,7 @@ const passwordResetRoute = require("./routes/passwordResetRoute");
 conncetDB();
 
 app.use(express.json()); 
+app.use(cors())  // Allow cors from all origin
 // All routes
 app.use('/', authRoutes);
 app.use('/', protedRoutes);
@@ -20,7 +21,7 @@ app.use('/', otpRoute); // you can remove this if you don't want otpRoute file
 app.use('/', passwordResetRoute);
 
 app.use(bodyParser.json());
-app.use(cors()) // Allow cors from all origin
+
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
